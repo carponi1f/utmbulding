@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Campaign URL Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS code here */
+        body {
+            font-family: "Montserrat", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+        }
+
+        input[type="text"], input[type="url"] {
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: "Montserrat", sans-serif;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .generated-url {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .generated-url h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Custom Campaign URL Builder</h1>
+        <form id="utmForm">
+            <label for="websiteUrl">Website URL*:</label>
+            <input type="url" id="websiteUrl" name="websiteUrl" placeholder="https://example.com" required>
+            
+            <label for="utmSource">Campaign Source*:</label>
+            <input type="text" id="utmSource" name="utm_source" required>
+            
+            <label for="utmMedium">Campaign Medium*:</label>
+            <input type="text" id="utmMedium" name="utm_medium" required>
+            
+            <label for="utmCampaign">Campaign Name*:</label>
+            <input type="text" id="utmCampaign" name="utm_campaign" required>
+            
+            <label for="utmContent">Campaign Content:</label>
+            <input type="text" id="utmContent" name="utm_content">
+            
+            <label for="utmTerm">Campaign Term:</label>
+            <input type="text" id="utmTerm" name="utm_term">
+            
+            <button type="submit">Generate URL</button>
+        </form>
+
+        <div id="generatedURL" class="generated-url">
+            <h2>Generated URL:</h2>
+            <p id="generatedUrlValue"></p>
+            <button id="copyButton" style="display: none;">Sao chép URL</button>
+        </div>
+
+    </div>
+
+    <script>
+        // JavaScript code here
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('utmForm');
+            const generatedUrlValue = document.getElementById('generatedUrlValue');
+            const copyButton = document.getElementById('copyButton');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const websiteUrl = document.getElementById('websiteUrl').value.trim();
+                const utmSource = document.getElementById('utmSource').value.trim();
+                const utmMedium = document.getElementById('utmMedium').value.trim();
+                const utmCampaign = document.getElementById('utmCampaign').value.trim();
+                const utmContent = document.getElementById('utmContent').value.trim();
+                const utmTerm = document.getElementById('utmTerm').value.trim();
+
+                let url = `${websiteUrl}?utm_source=${utmSource}&utm_medium=${utmMedium}&utm_campaign=${utmCampaign}`;
+
+                if (utmContent !== '') {
+                    url += `&utm_content=${utmContent}`;
+                }
+                if (utmTerm !== '') {
+                    url += `&utm_term=${utmTerm}`;
+                }
+
+                generatedUrlValue.textContent = url;
+
+                // Show the copy button
+                copyButton.style.display = 'block';
+            });
+
+            copyButton.addEventListener('click', function() {
+                // Copy URL to clipboard
+                const urlToCopy = generatedUrlValue.textContent;
+                navigator.clipboard.writeText(urlToCopy)
+                    .then(() => {
+                        alert('URL đã được sao chép thành công!');
+                    })
+                    .catch(err => {
+                        console.error('Lỗi khi sao chép URL:', err);
+                        alert('Đã xảy ra lỗi khi sao chép URL. Vui lòng thử lại.');
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
